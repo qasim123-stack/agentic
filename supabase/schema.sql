@@ -42,7 +42,7 @@ create table if not exists incidents (
   id         uuid primary key default gen_random_uuid(),
   date       date not null,
   type       text not null,
-  desc       text not null,
+  description text not null,
   status     text not null,
   severity   text not null,
   created_at timestamptz default now()

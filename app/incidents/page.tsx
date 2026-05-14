@@ -17,7 +17,7 @@ type Incident = {
   id: string;
   date: string;
   type: string;
-  desc: string;
+  description: string;
   status: string;
   severity: string;
 };
@@ -132,7 +132,7 @@ export default function IncidentsPage() {
                       <span style={{ fontFamily: "'Syne',sans-serif", fontSize: 14, fontWeight: 600, color: "#fff" }}>{inc.type}</span>
                       <span style={{ fontSize: 11, color: "var(--dim)" }}>{inc.date}</span>
                     </div>
-                    <div style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.6 }}>{inc.desc}</div>
+                    <div style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.6 }}>{inc.description}</div>
                   </div>
                   <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", padding: "3px 10px", borderRadius: 20, flexShrink: 0, color: inc.severity === "red" ? "var(--red)" : inc.severity === "amber" ? "var(--amber)" : "var(--green)", background: inc.severity === "red" ? "var(--red-bg)" : inc.severity === "amber" ? "var(--amber-bg)" : "var(--green-bg)", border: `1px solid ${inc.severity === "red" ? "rgba(240,82,82,0.2)" : inc.severity === "amber" ? "rgba(240,165,50,0.2)" : "rgba(22,201,132,0.2)"}` }}>
                     {inc.status}

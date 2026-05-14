@@ -30,7 +30,7 @@ insert into vendors (name, type, baa_expiry, breach_clause, subcontractors, risk
 
 -- ─── Incidents ───────────────────────────────────────────────────────────────
 truncate table incidents restart identity cascade;
-insert into incidents (date, type, desc, status, severity) values
+insert into incidents (date, type, description, status, severity) values
   ('2025-04-21', 'Unauthorized Access', 'Dr. Chen accessed 12 records outside her patients — flagged by audit log review.', 'Resolved', 'amber'),
   ('2025-03-08', 'Lost Device',         'Staff laptop reported missing — encryption confirmed, remote wipe executed.',       'Resolved', 'green'),
   ('2025-01-15', 'Email Misdirection',  'PHI sent to wrong email address. 1 patient affected. OCR notified.',               'Closed',   'amber');

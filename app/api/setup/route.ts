@@ -29,9 +29,9 @@ const vendors = [
 ];
 
 const incidents = [
-  { date: "2025-04-21", type: "Unauthorized Access", desc: "Dr. Chen accessed 12 records outside her patients — flagged by audit log review.", status: "Resolved", severity: "amber" },
-  { date: "2025-03-08", type: "Lost Device",         desc: "Staff laptop reported missing — encryption confirmed, remote wipe executed.",       status: "Resolved", severity: "green" },
-  { date: "2025-01-15", type: "Email Misdirection",  desc: "PHI sent to wrong email address. 1 patient affected. OCR notified.",               status: "Closed",   severity: "amber" },
+  { date: "2025-04-21", type: "Unauthorized Access", description: "Dr. Chen accessed 12 records outside her patients — flagged by audit log review.", status: "Resolved", severity: "amber" },
+  { date: "2025-03-08", type: "Lost Device",         description: "Staff laptop reported missing — encryption confirmed, remote wipe executed.",       status: "Resolved", severity: "green" },
+  { date: "2025-01-15", type: "Email Misdirection",  description: "PHI sent to wrong email address. 1 patient affected. OCR notified.",               status: "Closed",   severity: "amber" },
 ];
 
 export async function POST() {
