@@ -1,0 +1,51 @@
+ST. MARY'S GENERAL HOSPITAL
+HIPAA COMPLIANCE POLICY
+Last Updated: March 2022
+
+1. PURPOSE
+This policy establishes the procedures for protecting patient health information (PHI)
+in accordance with the Health Insurance Portability and Accountability Act of 1996.
+
+2. SCOPE
+This policy applies to all workforce members who access, use, or disclose PHI.
+
+3. ACCESS CONTROLS
+Access to electronic PHI (ePHI) is restricted to authorized personnel only.
+User accounts are assigned based on job function. Passwords must be at least
+8 characters and changed every 90 days. Shared workstations must be locked
+when unattended.
+
+NOTE: Multi-factor authentication is recommended for remote access situations
+where feasible, but is not currently required for all staff.
+
+4. TRANSMISSION SECURITY
+ePHI transmitted over external networks should use encryption where possible.
+Internal network transmissions are protected by our firewall infrastructure.
+
+5. AUDIT CONTROLS
+System activity logs are maintained on all systems containing ePHI.
+Logs are reviewed on a monthly basis by the IT department.
+
+6. WORKFORCE TRAINING
+All new employees receive HIPAA training during orientation. Annual refresher
+training is encouraged but scheduling is at department manager discretion.
+
+7. BUSINESS ASSOCIATES
+The hospital maintains agreements with business associates who handle PHI.
+A current list of business associates is maintained by the Compliance Office.
+Business associate agreements are reviewed periodically.
+
+8. BREACH NOTIFICATION
+In the event of a suspected breach of PHI, the incident should be reported
+to the Compliance Officer. The Compliance Officer will assess the breach and
+notify affected individuals and HHS as required by law within 60 days.
+
+9. RISK ANALYSIS
+The hospital conducts risk assessments to identify threats to ePHI security.
+Risk assessments are conducted when significant operational changes occur.
+
+10. PHYSICAL SAFEGUARDS
+Server rooms and areas containing PHI are restricted to authorized personnel.
+Visitor access is logged.
+
+END OF POLICY
