@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/app/lib/supabase";
+import { supabaseAdmin } from "@/app/lib/supabase";
 
 const staff = [
   { name: "Dr. Sarah Chen",  role: "Attending Physician",  training: "Overdue 14d", access: "Active",        risk: "amber", last_access: "Today, 09:14" },
@@ -36,17 +36,19 @@ const incidents = [
 
 export async function POST() {
   try {
+    const db = supabaseAdmin();
+
     // Delete existing data then insert fresh — avoids needing unique constraints
-    await supabase.from("staff").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-    await supabase.from("systems").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-    await supabase.from("vendors").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-    await supabase.from("incidents").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    await db.from("staff").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    await db.from("systems").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    await db.from("vendors").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    await db.from("incidents").delete().neq("id", "00000000-0000-0000-0000-000000000000");
 
     const [s, sy, v, i] = await Promise.all([
-      supabase.from("staff").insert(staff),
-      supabase.from("systems").insert(systems),
-      supabase.from("vendors").insert(vendors),
-      supabase.from("incidents").insert(incidents),
+      db.from("staff").insert(staff),
+      db.from("systems").insert(systems),
+      db.from("vendors").insert(vendors),
+      db.from("incidents").insert(incidents),
     ]);
 
     const errors = [s.error, sy.error, v.error, i.error].filter(Boolean);
