@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Nav from "../components/Nav";
+import { supabase } from "../lib/supabase";
 
 type AuditMessage = { role: "user" | "assistant"; content: string };
 type AuditState = {
@@ -12,14 +13,18 @@ type AuditState = {
   verdict?: string;
   top_risks?: string[];
 };
-
-const recentIncidents = [
-  { date: "2025-04-21", type: "Unauthorized Access", desc: "Dr. Chen accessed 12 records outside her patients — flagged by audit log review.", status: "Resolved", severity: "amber" },
-  { date: "2025-03-08", type: "Lost Device",          desc: "Staff laptop reported missing — encryption confirmed, remote wipe executed.", status: "Resolved", severity: "green" },
-  { date: "2025-01-15", type: "Email Misdirection",   desc: "PHI sent to wrong email address. 1 patient affected. OCR notified.",          status: "Closed",   severity: "amber" },
-];
+type Incident = {
+  id: string;
+  date: string;
+  type: string;
+  desc: string;
+  status: string;
+  severity: string;
+};
 
 export default function IncidentsPage() {
+  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [incidentsLoading, setIncidentsLoading] = useState(true);
   const [tab, setTab] = useState<"incidents" | "audit">("incidents");
   const [auditStarted, setAuditStarted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,6 +33,13 @@ export default function IncidentsPage() {
   const [answer, setAnswer] = useState("");
   const [totalScore, setTotalScore] = useState(0);
   const [scoreHistory, setScoreHistory] = useState<number[]>([]);
+
+  useEffect(() => {
+    supabase.from("incidents").select("*").order("date", { ascending: false }).then(({ data }) => {
+      if (data) setIncidents(data);
+      setIncidentsLoading(false);
+    });
+  }, []);
 
   async function callAudit(msgs: AuditMessage[]) {
     setLoading(true);
@@ -97,10 +109,10 @@ export default function IncidentsPage() {
           <div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 1, background: "var(--border)", border: "1px solid var(--border)", borderRadius: 12, overflow: "hidden", marginBottom: "2rem" }}>
               {[
-                { label: "This Year",       val: "3",      color: "var(--amber)" },
-                { label: "Open",            val: "0",      color: "var(--green)" },
-                { label: "OCR Reportable",  val: "1",      color: "var(--amber)" },
-                { label: "Avg Response",    val: "4.2hrs", color: "var(--blue)" },
+                { label: "Total",          val: String(incidents.length),                                        color: "var(--amber)" },
+                { label: "Open",           val: String(incidents.filter(i => i.status === "Open").length),       color: "var(--green)" },
+                { label: "OCR Reportable", val: String(incidents.filter(i => i.severity === "red").length),      color: "var(--red)" },
+                { label: "Resolved",       val: String(incidents.filter(i => i.status === "Resolved").length),   color: "var(--blue)" },
               ].map(s => (
                 <div key={s.label} style={{ background: "var(--bg-2)", padding: "1.2rem 1.4rem" }}>
                   <div style={{ fontFamily: "'Syne',sans-serif", fontSize: "1.8rem", fontWeight: 800, color: s.color }}>{s.val}</div>
@@ -109,8 +121,11 @@ export default function IncidentsPage() {
               ))}
             </div>
 
+            {incidentsLoading ? (
+              <div style={{ textAlign: "center", padding: "3rem", color: "var(--muted)", fontSize: 13 }}>Loading incidents…</div>
+            ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {recentIncidents.map(inc => (
+              {incidents.map(inc => (
                 <div key={inc.date} style={{ background: "var(--bg-2)", border: "1px solid var(--border)", borderRadius: 12, padding: "1.4rem", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem" }}>
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
@@ -125,6 +140,7 @@ export default function IncidentsPage() {
                 </div>
               ))}
             </div>
+            )}
           </div>
         )}
 

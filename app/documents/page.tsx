@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import Nav from "../components/Nav";
+import { supabase } from "../lib/supabase";
 
 type Gap = {
   id: string;
@@ -37,7 +38,7 @@ export default function DocumentsPage() {
   const [demoMode, setDemoMode] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  async function runAnalysis(text: string) {
+  async function runAnalysis(text: string, filename = "Uploaded Policy") {
     setLoading(true);
     setError("");
     try {
@@ -49,6 +50,13 @@ export default function DocumentsPage() {
       if (!res.ok) throw new Error("Analysis failed");
       const data = await res.json();
       setAnalysis(data);
+      // Persist result to Supabase
+      await supabase.from("gap_analyses").insert({
+        filename,
+        overall_score: data.overall_score,
+        summary: data.summary,
+        gaps: data.gaps,
+      });
     } catch {
       setError("Analysis failed. Make sure ANTHROPIC_API_KEY is set in .env.local");
     } finally {
@@ -60,14 +68,14 @@ export default function DocumentsPage() {
     setDemoMode(true);
     const res = await fetch(SAMPLE_POLICY_URL);
     const text = await res.text();
-    await runAnalysis(text);
+    await runAnalysis(text, "Sample Hospital Policy");
   }
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     const text = await file.text();
-    await runAnalysis(text);
+    await runAnalysis(text, file.name);
   }
 
   const critical = analysis?.gaps.filter(g => g.severity === "critical") ?? [];
