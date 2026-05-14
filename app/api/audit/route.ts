@@ -1,7 +1,7 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { NextRequest, NextResponse } from "next/server";
 
-const client = new Anthropic();
+const client = new OpenAI();
 
 const SYSTEM_PROMPT = `You are an OCR (Office for Civil Rights) investigator conducting a HIPAA Security Rule compliance audit.
 You ask exactly 5 questions from OCR's official audit protocol, one at a time.
@@ -24,16 +24,18 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-6",
+    const response = await client.chat.completions.create({
+      model: "gpt-4o",
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages: messages.length === 0
-        ? [{ role: "user", content: "Begin the audit. Ask the first question." }]
-        : messages,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        ...(messages.length === 0
+          ? [{ role: "user" as const, content: "Begin the audit. Ask the first question." }]
+          : messages),
+      ],
     });
 
-    const raw = (response.content[0] as { type: string; text: string }).text;
+    const raw = response.choices[0].message.content ?? "";
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) return NextResponse.json({ error: "Parse error" }, { status: 500 });
 

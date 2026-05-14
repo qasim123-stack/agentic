@@ -1,7 +1,7 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { NextRequest, NextResponse } from "next/server";
 
-const client = new Anthropic();
+const client = new OpenAI();
 
 const SYSTEM_PROMPT = `You are a HIPAA compliance expert specializing in the 2025 HIPAA Security Rule NPRM.
 Analyze the provided policy document and identify compliance gaps against the new mandatory requirements.
@@ -37,14 +37,16 @@ export async function POST(req: NextRequest) {
     const { text } = await req.json();
     if (!text) return NextResponse.json({ error: "No text provided" }, { status: 400 });
 
-    const message = await client.messages.create({
-      model: "claude-sonnet-4-6",
+    const response = await client.chat.completions.create({
+      model: "gpt-4o",
       max_tokens: 2048,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: `Analyze this HIPAA policy document:\n\n${text.slice(0, 8000)}` }],
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: `Analyze this HIPAA policy document:\n\n${text.slice(0, 8000)}` },
+      ],
     });
 
-    const raw = (message.content[0] as { type: string; text: string }).text;
+    const raw = response.choices[0].message.content ?? "";
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) return NextResponse.json({ error: "Could not parse response" }, { status: 500 });
 
